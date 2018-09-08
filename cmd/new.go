@@ -59,4 +59,5 @@ $ cfg new myTempl myInstance.json -- --random`,
 
 func init() {
 	rootCmd.AddCommand(newCmd)
+	newCmd.Flags().BoolVarP(&newCfg.DoUseDefaultVals, "default", "", false, "uses default values rather than copying the template values")
 }
