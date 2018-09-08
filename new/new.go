@@ -14,13 +14,13 @@ import (
 )
 
 func MustNew(cfg *Config) {
-	if err := New(cfg.TemplName, cfg.Targets, cfg.DoUseDefaultVals); err != nil {
+	if err := New(cfg.TemplName, cfg.Targets, cfg.DoUseDefaults); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func New(templName string, targets []string, doUseDefaultVals bool) error {
+func New(templName string, targets []string, doUseDefaults bool) error {
 	baseDir, err := dotcfg.GetBaseDir()
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func New(templName string, targets []string, doUseDefaultVals bool) error {
 		templSchemaPath = filepath.Join(dotcfg.SchemasDirName, templObj.FilePath)
 	}
 
-	if doUseDefaultVals {
+	if doUseDefaults {
 		args := append([]string{"init", "-s", templSchemaPath}, targets...)
 		cmd := exec.Command("schema", args...)
 		if err := cmdrunner.PipeTo(cmd, os.Stdout, os.Stderr); err != nil {
@@ -63,7 +63,7 @@ func New(templName string, targets []string, doUseDefaultVals bool) error {
 	}
 
 	for _, target := range targets {
-		if !doUseDefaultVals {
+		if !doUseDefaults {
 			f, err := os.Create(target)
 			if _, err = io.Copy(f, templFile); err != nil {
 				return err
